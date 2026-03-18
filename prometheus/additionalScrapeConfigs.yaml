@@ -1,0 +1,8 @@
+- job_name: aiops-quality-project
+  metrics_path: /metrics
+  kubernetes_sd_configs:
+    - role: endpoints
+  relabel_configs:
+    - source_labels: [__meta_kubernetes_service_name]
+      regex: aiops-quality-project
+      action: keep

@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: i1inandrii/aiops-quality-project
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 300m
+    memory: 512Mi
+
+env:
+  MODEL_PATH: /app/model/model.pkl
+  DRIFT_THRESHOLD: "8.0"
+
+serviceMonitor:
+  enabled: true
+  interval: 15s
+  scrapePath: /metrics

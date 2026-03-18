@@ -1,0 +1,32 @@
+{
+  "title": "AIOps Quality Project",
+  "panels": [
+    {
+      "title": "Requests per minute",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(inference_requests_total[1m]) * 60"
+        }
+      ]
+    },
+    {
+      "title": "Latency p95",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(inference_request_latency_seconds_bucket[5m])) by (le))"
+        }
+      ]
+    },
+    {
+      "title": "Drift alerts",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "increase(drift_alerts_total[5m])"
+        }
+      ]
+    }
+  ]
+}

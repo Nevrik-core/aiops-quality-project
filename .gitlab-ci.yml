@@ -1,0 +1,42 @@
+stages:
+  - train
+  - build
+  - deploy
+
+variables:
+  IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+
+retrain-model:
+  stage: train
+  image: python:3.11
+  script:
+    - pip install scikit-learn
+    - python model/train.py
+  artifacts:
+    paths:
+      - model/model.pkl
+  rules:
+    - when: manual
+
+build-image:
+  stage: build
+  image: docker:27
+  services:
+    - docker:27-dind
+  script:
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - docker build -t $DOCKERHUB_USERNAME/aiops-quality-project:$IMAGE_TAG .
+    - docker push $DOCKERHUB_USERNAME/aiops-quality-project:$IMAGE_TAG
+  rules:
+    - when: manual
+
+update-helm:
+  stage: deploy
+  image: alpine:3.20
+  before_script:
+    - apk add --no-cache sed
+  script:
+    - sed -i "s/tag: .*/tag: ${IMAGE_TAG}/" helm/values.yaml
+    - cat helm/values.yaml
+  rules:
+    - when: manual
