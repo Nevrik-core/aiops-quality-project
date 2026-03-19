@@ -21,6 +21,12 @@ app = FastAPI(title="aiops-quality-project")
 
 model = None
 
+CLASS_NAMES = {
+    0: "setosa",
+    1: "versicolor",
+    2: "virginica",
+}
+
 
 class PredictRequest(BaseModel):
     features: List[float]
@@ -28,6 +34,7 @@ class PredictRequest(BaseModel):
 
 class PredictResponse(BaseModel):
     prediction: int
+    class_name: str
     drift_detected: bool
     message: str
 
@@ -76,11 +83,13 @@ def predict_endpoint(payload: PredictRequest):
     print(f"Incoming request: {payload.features}")
     drift_detected = detect_drift(payload.features)
     prediction = predict(payload.features)
+    class_name = CLASS_NAMES.get(prediction, "unknown")
 
     REQUEST_LATENCY.observe(time.time() - start)
 
     return PredictResponse(
         prediction=prediction,
+        class_name=class_name,
         drift_detected=drift_detected,
         message="Prediction completed",
     )

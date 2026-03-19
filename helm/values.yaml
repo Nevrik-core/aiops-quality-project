@@ -19,7 +19,7 @@ resources:
 
 env:
   MODEL_PATH: /app/model/model.pkl
-  DRIFT_THRESHOLD: "8.0"
+  DRIFT_THRESHOLD: "15.0"
 
 serviceMonitor:
   enabled: true

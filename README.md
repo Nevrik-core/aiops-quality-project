@@ -18,3 +18,9 @@ python model/train.py
 pip install -r app/requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
+
+(.venv) MacBookAir:aiops-quality-project ozzy$ curl -X POST http://localhost:8000/predict \
+
+> -H "Content-Type: application/json" \
+>  -d '{"features":[5.1,3.5,1.4,0.2]}'
+> {"prediction":0,"class_name":"setosa","drift_detected":true,"message":"Prediction completed"}(.venv) MacBookAir:aiops-quality-project ozzy$
