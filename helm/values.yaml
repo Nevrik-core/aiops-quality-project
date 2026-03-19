@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: i1inandrii/aiops-quality-project
-  tag: latest
+  tag: amd64-v1
   pullPolicy: IfNotPresent
 
 service:
